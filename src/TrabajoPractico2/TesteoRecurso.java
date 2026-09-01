@@ -14,11 +14,11 @@ public class TesteoRecurso{
 
         
     }
-    //hay 3 hilos: el main y Juan e Ines 
-    //el metodo uso recupera el hilo en ejecucion y muestra su nombre
-    // uso() a final del main muestra el hilo q esta en ejecucion q es el
-    //Cambiar el orden no tiene impacto, la cpu decide que hilo hace uso de su computo
-    //SALIDAS
+    //a) hay 3 hilos: el main y Juan e Ines 
+    //b) el metodo uso recupera el hilo en ejecucion y muestra su nombre
+    // d)unRecurso.uso() a final del main muestra el hilo q esta en ejecucion q es el
+    //e) Cambiar el orden no tiene impacto, la cpu decide que hilo hace uso de su computo
+    //c) SALIDAS
 //soy: Juan Lopez
 // soy: Ines Garcia
 // en Recurso:  Soy Juan Lopez
