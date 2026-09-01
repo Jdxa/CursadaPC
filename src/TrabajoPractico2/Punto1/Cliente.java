@@ -1,4 +1,4 @@
-package TrabajoPractico2;
+package TrabajoPractico2.Punto1;
 public class Cliente extends Thread {
     private Recurso miRecurso;
 
