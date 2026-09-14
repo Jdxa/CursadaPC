@@ -1,4 +1,4 @@
-package TrabajoPractico2;
+package TrabajoPractico2.Punto1;
 public class TesteoRecurso{
     public static void main(String[] args) {
         Recurso unRecurso = new Recurso();
@@ -19,13 +19,13 @@ public class TesteoRecurso{
     // d)unRecurso.uso() a final del main muestra el hilo q esta en ejecucion q es el
     //e) Cambiar el orden no tiene impacto, la cpu decide que hilo hace uso de su computo
     //c) SALIDAS
-//soy: Juan Lopez
-// soy: Ines Garcia
-// en Recurso:  Soy Juan Lopez
-// en Recurso:  Soy Ines Garcia
+    //soy: Juan Lopez
+    // soy: Ines Garcia
+    // en Recurso:  Soy Juan Lopez
+    // en Recurso:  Soy Ines Garcia
 
-// soy: Ines Garcia
-// soy: Juan Lopez
-// en Recurso:  Soy Ines Garcia
-// en Recurso:  Soy Juan Lopez
+    // soy: Ines Garcia
+    // soy: Juan Lopez
+    // en Recurso:  Soy Ines Garcia
+    // en Recurso:  Soy Juan Lopez
 } 
