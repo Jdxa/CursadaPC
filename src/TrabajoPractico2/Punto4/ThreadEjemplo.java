@@ -4,6 +4,7 @@ public class ThreadEjemplo implements Runnable{
     public ThreadEjemplo(){
 
     }
+    //Constructor innecesario
     @Override
     public void run(){
         for (int i = 0; i < 10; i++){
