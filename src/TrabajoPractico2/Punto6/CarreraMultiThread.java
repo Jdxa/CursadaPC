@@ -10,14 +10,14 @@ public class CarreraMultiThread {
         System.out.println("Ingrese cuantos corredores van a participar: ");
         cantidadCorredores = sc.nextInt();
 
-        // 1. Crear corredores e hilos
+        // Crear corredores e hilos
         Corredor[] corredores = inicializarCorredores(cantidadCorredores);
         Thread[] hilos = lanzarCorredores(corredores);
 
-        // 2. Sincronizar (esperar a que todos terminen)
+        // sincronizar (esperar a que todos terminen)
         esperarFinDeCarrera(hilos);
 
-        // 3. Obtener y mostrar el resultado
+        // Obtener y mostrar el resultado
         Corredor ganador = encontrarGanador(corredores);
         System.out.println("\n--- RESULTADO FINAL ---");
         System.out.println("El ganador es " + ganador.getNombre() +
@@ -46,6 +46,7 @@ public class CarreraMultiThread {
 
     // espero a que termine la carrera
     private static void esperarFinDeCarrera(Thread[] hilos) {
+        // hago que el main espere a que terminen los hilos asi determino al ganador
         for (Thread hilo : hilos) {
             try {
                 hilo.join();
@@ -55,8 +56,10 @@ public class CarreraMultiThread {
         }
     }
 
+    // busco al que corrio mas
     private static Corredor encontrarGanador(Corredor[] corredores) {
         Corredor ganador = corredores[0];
+        // busco al que mayor distancia recorrida tenga
         for (int i = 1; i < corredores.length; i++) {
             if (corredores[i].getDistanciaRecorrida() > ganador.getDistanciaRecorrida()) {
                 ganador = corredores[i];
