@@ -1,9 +1,10 @@
 package TrabajoPractico2.Punto5;
 
-public class HiloContador implements Runnable {
+public class HiloContadorv2 extends Thread {
     String nombreHilo;
 
-    public HiloContador(String nombre) {
+    public HiloContadorv2(String nombre) {
+        super(nombre);
         nombreHilo = nombre;
     }
 
