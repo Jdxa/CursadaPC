@@ -10,6 +10,7 @@ public class TesteoRecurso{
 
         ines.start();
         juan.start();
+        unRecurso.uso();
         
 
         
