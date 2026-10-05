@@ -19,10 +19,10 @@ public class Datos {
     public void incrementar() throws InterruptedException {
         // me aseguro que suma y guarda uno con ese hilo y no interrumpe el otro la
         // operacion
-        mutex.acquire(); // adquiero el sem
+        mutex.acquire(); // adquiero el sem permisos-1
         dato++;
         System.out.println("el hilo " + Thread.currentThread().getName() + " sumo " + dato);
         // Thread.sleep(500);
-        mutex.release(); // lo libero al sem
+        mutex.release(); // lo libero al sem permisos+1
     }
 }
