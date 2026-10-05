@@ -9,7 +9,7 @@ public class CriaturaOscura implements Runnable {
 
     @Override
     public void run() {
-        for (int i = 0; i < 5; i++) {
+        while(recurso.getPoder()>0&&recurso.getPoder()<20){
             recurso.modificarPoder(-3);
         }
     }
