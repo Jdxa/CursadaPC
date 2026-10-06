@@ -4,10 +4,9 @@ import java.util.concurrent.Semaphore;
 
 public class GestorImpresora {
     private final Semaphore impresorasDisponibles;
-    private final int totalImpresoras;
 
     public GestorImpresora(int cantImpresoras) {
-        this.totalImpresoras = cantImpresoras;
+
         this.impresorasDisponibles = new Semaphore(cantImpresoras, true);
     }
 
@@ -24,8 +23,8 @@ public class GestorImpresora {
             System.out
                     .println("<-- " + Thread.currentThread().getName() + " terminó de imprimir y libera la impresora.");
         } finally {
-
+            impresorasDisponibles.release();
         }
-        impresorasDisponibles.release();
+
     }
 }
