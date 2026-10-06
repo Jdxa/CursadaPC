@@ -3,7 +3,7 @@ package TrabajoPractico3.Punto2;
 public class Energia {
     private int poder = 10;
 
-    public int getPoder() {
+    public synchronized int getPoder() {
         return this.poder;
     }
 
