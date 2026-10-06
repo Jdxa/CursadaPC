@@ -1,6 +1,6 @@
 package TrabajoPractico2.Punto7;
 
-public class main {
+public class MainCajero {
     public static void main(String[] args) {
         CompraCliente compra1 = new CompraCliente("CompraCliente1", new int[] { 2, 2, 1, 5, 2, 3 });
         CompraCliente compra2 = new CompraCliente("CompraCliente2", new int[] { 1, 3, 5, 1, 1 });
