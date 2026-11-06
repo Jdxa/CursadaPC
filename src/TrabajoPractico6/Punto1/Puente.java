@@ -1,30 +1,35 @@
 package TrabajoPractico6.Punto1;
 
-import java.util.concurrent.Semaphore;
-
 public class Puente {
-    private Semaphore semNorte= new Semaphore(1);
-    private Semaphore semSur = new Semaphore(0);
+    private boolean puenteOcupado = false;
 
-    public void entrarNorte() throws InterruptedException{
-        semNorte.acquire();
-        System.out.println(Thread.currentThread().getName()+" entro al norte");
-        
+    // --- ENTRADA NORTE ---
+    public synchronized void entrarNorte() throws InterruptedException {
+        while (puenteOcupado) {
+            this.wait(); // Espera si ya hay un coche en el puente
+        }
+        puenteOcupado = true;
+        System.out.println(Thread.currentThread().getName() + " entró por el norte");
     }
 
-    public void salirNorte() throws InterruptedException{
-        System.out.println(Thread.currentThread().getName()+" sale del norte");
-        semSur.release();
+    public synchronized void salirNorte() {
+        puenteOcupado = false;
+        System.out.println(Thread.currentThread().getName() + " salió por el norte");
+        this.notifyAll(); // Despierta a los demás hilos en espera
     }
 
-    public void entrarSur() throws InterruptedException{
-        semSur.acquire();
-        System.out.println(Thread.currentThread().getName()+" entrar del sur");
-
+    // --- ENTRADA SUR (Hace exactamente lo mismo) ---
+    public synchronized void entrarSur() throws InterruptedException {
+        while (puenteOcupado) {
+            this.wait();
+        }
+        puenteOcupado = true;
+        System.out.println(Thread.currentThread().getName() + " entró por el sur");
     }
-    public void salirSur() throws InterruptedException{
-        System.out.println(Thread.currentThread().getName()+" sale del sur");
-        semNorte.release();
-    }
 
+    public synchronized void salirSur() {
+        puenteOcupado = false;
+        System.out.println(Thread.currentThread().getName() + " salió por el sur");
+        this.notifyAll();
+    }
 }

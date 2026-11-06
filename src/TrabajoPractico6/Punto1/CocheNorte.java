@@ -11,10 +11,10 @@ public class CocheNorte implements Runnable {
     public void run() {
         try {
             puente1.entrarNorte();
-            Thread.sleep(2000);
+            Thread.sleep(1500);
             puente1.salirNorte();
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println(e.getMessage());
         }
     }
 }

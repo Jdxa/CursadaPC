@@ -9,7 +9,7 @@ public class CocheSur implements Runnable{
     public void run(){
        try {
         puente1.entrarSur();
-        Thread.sleep(2000);
+        Thread.sleep(1500);
         puente1.salirSur();
        } catch (Exception e) {
         // 
