@@ -15,8 +15,9 @@ public class CajaHerramientas {
             System.out.println(Thread.currentThread().getName()+" agarro el nivel");
             Thread.sleep(500);
         }finally{
-            nivel.release();
             System.out.println(Thread.currentThread().getName()+" solto el nivel");
+            nivel.release();
+            
         }
     }
 
