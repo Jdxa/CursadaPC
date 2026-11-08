@@ -94,6 +94,9 @@ public class Puente {
         cantCoches--;
         System.out.println(
                 miNombre + " salió por el sur. cantCoches=" + cantCoches + ", surCruzados=" + surCruzadosEnTanda);
+
+        // verifico que haya superado la tanda de 10 coches o que no haya nadie
+        // esperando en este extremo siempre y cuando hayan pasado todos los coches
         if ((surCruzadosEnTanda >= 10 || esperandoSur == 0) && cantCoches == 0) {
             System.out.println("salio el ultimo del sur");
             if (esperandoNorte > 0) {
