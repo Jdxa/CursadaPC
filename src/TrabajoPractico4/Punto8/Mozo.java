@@ -1,7 +1,5 @@
 package TrabajoPractico4.Punto8;
 
-import java.nio.channels.Pipe.SourceChannel;
-
 public class Mozo implements Runnable {
     private Confiteria confiteria;
 
