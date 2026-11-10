@@ -2,7 +2,7 @@ package TrabajoPractico7.Punto1;
 
 public class Normal implements Runnable {
 
-    GestorSala gestor = new GestorSala();
+    GestorSala gestor;
 
     public Normal(GestorSala ge) {
         this.gestor = ge;
