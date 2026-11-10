@@ -1,5 +1,7 @@
 package TrabajoPractico4.Punto8;
 
+import java.nio.channels.Pipe.SourceChannel;
+
 public class Mozo implements Runnable {
     private Confiteria confiteria;
 
@@ -17,7 +19,7 @@ public class Mozo implements Runnable {
                 // se queda en espera activa xq no hay mas empleados que atender
             }
         } catch (InterruptedException e) {
-            // TODO: handle exception
+            System.out.println("error de interrupcion");
         }
     }
 }
