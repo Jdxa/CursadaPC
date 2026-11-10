@@ -1,5 +1,8 @@
 package TrabajoPractico6.Punto1;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Puente {
 
     private int cantCoches = 0;
@@ -9,12 +12,19 @@ public class Puente {
     private int esperandoNorte = 0;
     private int esperandoSur = 0;
 
+    private int norteCruzadosEnTanda = 0;
+    private int surCruzadosEnTanda = 0;
+
+    private final Queue<String> colaSalidaNorte = new LinkedList<>();
+    private final Queue<String> colaSalidaSur = new LinkedList<>();
+
     // ENTRADA NORTE
     public synchronized void entrarNorte() throws InterruptedException {
+        String miNombre = Thread.currentThread().getName();
         esperandoNorte++;
         // lo hace esperar y comprueba que pueda pasar o no
         try {
-            while (cantCoches >= 10 || !puedeNorte) {
+            while (cantCoches >= 10 || !puedeNorte || norteCruzadosEnTanda >= 10) {
                 this.wait(); // espera si pasaron 10 o si vienen del sentido contrario
             }
         } finally {
@@ -22,30 +32,45 @@ public class Puente {
             esperandoNorte--;
         }
         cantCoches++; // aumento la cantidad q estan pasando
-        System.out.println(Thread.currentThread().getName() + " entró por el norte");
+        norteCruzadosEnTanda++;
+        colaSalidaNorte.add(miNombre);
+        System.out.println(miNombre + " entró por el norte");
     }
 
-    public synchronized void salirNorte() {
+    public synchronized void salirNorte() throws InterruptedException {
+        String miNombre = Thread.currentThread().getName();
+
+        while (!colaSalidaNorte.peek().equals(miNombre)) {
+            this.wait();
+        }
+
+        colaSalidaNorte.poll();
         cantCoches--; // reduzco la cantidad de autos en el puente
-        System.out.println(Thread.currentThread().getName() + " salió por el norte");
+
         // si salio el ultimo despierto a los demas y cambio el sentido solo si hay
-        // alguno esperando del otro lado
-        if (cantCoches == 0) {
+        // alguno
+        System.out.println(
+                miNombre + " salió por el norte. cantCoches=" + cantCoches + ", norteCruzados=" + norteCruzadosEnTanda);
+        if ((norteCruzadosEnTanda >= 10 || esperandoNorte == 0) && cantCoches == 0) {
             System.out.println("salio el ultimo del norte");
             if (esperandoSur > 0) {
                 // solo cambia de direccion si hay del otro lado esperando
+                System.out.println("cambio el sentido a sur");
                 puedeNorte = false;
                 puedeSur = true;
+                norteCruzadosEnTanda = 0;
             }
-            this.notifyAll();
+
         }
+        this.notifyAll();
     }
 
     // ENTRADA SUR
     public synchronized void entrarSur() throws InterruptedException {
+        String miNombre = Thread.currentThread().getName();
         esperandoSur++;
         try {
-            while (cantCoches >= 10 || !puedeSur) {
+            while (cantCoches >= 10 || !puedeSur || surCruzadosEnTanda >= 10) {
                 this.wait(); // espera si pasaron 10 o si vienen del sentido contrario
             }
         } finally {
@@ -53,21 +78,37 @@ public class Puente {
         }
 
         cantCoches++;
-        System.out.println(Thread.currentThread().getName() + " entró por el sur");
+        surCruzadosEnTanda++;
+        colaSalidaSur.add(miNombre);
+        System.out.println(miNombre + " entró por el sur");
     }
 
-    public synchronized void salirSur() {
+    public synchronized void salirSur() throws InterruptedException {
+        String miNombre = Thread.currentThread().getName();
+
+        while (!colaSalidaSur.peek().equals(miNombre)) {
+            this.wait();
+        }
+
+        colaSalidaSur.poll();
         cantCoches--;
-        System.out.println(Thread.currentThread().getName() + " salió por el sur");
-        if (cantCoches == 0) {
+        System.out.println(
+                miNombre + " salió por el sur. cantCoches=" + cantCoches + ", surCruzados=" + surCruzadosEnTanda);
+
+        // verifico que haya superado la tanda de 10 coches o que no haya nadie
+        // esperando en este extremo siempre y cuando hayan pasado todos los coches
+        if ((surCruzadosEnTanda >= 10 || esperandoSur == 0) && cantCoches == 0) {
             System.out.println("salio el ultimo del sur");
             if (esperandoNorte > 0) {
                 // solo cambia de direccion si hay del otro lado esperando
+                System.out.println("cambio el sentido a norte");
                 puedeSur = false;
                 puedeNorte = true;
+                surCruzadosEnTanda = 0;
             }
-            this.notifyAll();
+
         }
+        this.notifyAll();
 
     }
 }
