@@ -1,7 +1,7 @@
 package TrabajoPractico7.Punto1;
 
 public class Jubilado implements Runnable {
-    GestorSala gestor = new GestorSala();
+    GestorSala gestor;
 
     public Jubilado(GestorSala ge) {
         this.gestor = ge;

@@ -5,7 +5,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class GestorSala {
-    private int tempActual = 20;
+    private int tempActual;
     private final Lock cerrojo = new ReentrantLock();
     private final Condition condPersona = cerrojo.newCondition();
     private final Condition condJubilado = cerrojo.newCondition();
@@ -13,22 +13,29 @@ public class GestorSala {
     private int cantPersonas = 0;
     private int cantJubiladosEsperando = 0;
 
-    private static final int MAX_NORMAL = 5;
-    private static final int MAX_CALOR = 3;
-    private static final int UMBRAL_TEMP = 30;
+    private int MAX_NORMAL;
+    private int MAX_CALOR;
+    private int UMBRAL_TEMP;
 
+    public GestorSala(int tUmbral, int capNormal, int capCalor, int tempActual){
+        this.UMBRAL_TEMP = tUmbral;
+        this.MAX_NORMAL = capNormal;
+        this.MAX_CALOR = capCalor;
+        this.tempActual = tempActual;
+    }
     public void entrarSala() throws InterruptedException {
-        cerrojo.lock();
+        cerrojo.lock(); //cierro el lock
         try {
+            //si esta lleno debe esperar, si hay un jubilado esperando debe esperar
             while (cantPersonas >= obtenerLimiteActual() || cantJubiladosEsperando > 0) {
                 System.out.println(Thread.currentThread().getName() + " espera en la cola");
-                condPersona.await();
+                condPersona.await(); //va al CE de "persona"
             }
             cantPersonas++;
             System.out.println(Thread.currentThread().getName() + " entro a la sala. CantidadActual: " + cantPersonas);
 
         } finally {
-            cerrojo.unlock();
+            cerrojo.unlock(); //libero el lock
         }
     }
 
@@ -40,12 +47,14 @@ public class GestorSala {
                 while (cantPersonas >= obtenerLimiteActual()) {
                     // no hay capacidad
                     System.out.println(Thread.currentThread().getName() + " espera en la cola, no hay capacidad");
-                    condJubilado.await();
+                    condJubilado.await(); //se va al CE del jubilado
                 }
+                cantPersonas++;
             } finally {
+                //llega aqui tras el while
                 cantJubiladosEsperando--;
             }
-            System.out.println(Thread.currentThread().getName() + " entro por prioridad");
+            System.out.println(Thread.currentThread().getName() + " entro por prioridad. CantidadActual: "+cantPersonas);
         } finally {
             cerrojo.unlock();
         }
@@ -54,11 +63,12 @@ public class GestorSala {
     public void salirSala() throws InterruptedException {
         cerrojo.lock();
         try {
-            cantPersonas--;
+            cantPersonas--; //decresco la cantidad de personas en la sala
+            //libero antes a los jubilados esperando si es que hay
             if (cantJubiladosEsperando > 0) {
-                condJubilado.signal();
+                condJubilado.signal(); //le avisa a uno del CE de jubilado
             } else {
-                condPersona.signal();
+                condPersona.signal(); //le avisa a uno del CE de persona
             }
 
             System.out.println(Thread.currentThread().getName() + " salio de la sala");
@@ -67,12 +77,13 @@ public class GestorSala {
         }
 
     }
-
+    //metodo para hilo medidor
     public void notificarTemperatura(int temperatura) {
         cerrojo.lock();
         try {
             int tempAnterior = tempActual;
             tempActual = temperatura;
+            //si bajo la temperatura aviso porque habra mas lugar
             if (tempActual <= UMBRAL_TEMP && tempAnterior > UMBRAL_TEMP) {
                 condJubilado.signalAll();
                 condPersona.signalAll();
