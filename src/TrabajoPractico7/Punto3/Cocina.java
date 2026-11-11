@@ -10,9 +10,9 @@ public class Cocina {
     private int cantPasta;
 
     private final Lock cerrojo = new ReentrantLock();
-    private Condition condVerdura = cerrojo.newCondition();
-    private Condition condCarne = cerrojo.newCondition();
-    private Condition condPasta = cerrojo.newCondition();
+    private final Condition condVerdura = cerrojo.newCondition();
+    private final Condition condCarne = cerrojo.newCondition();
+    private final Condition condPasta = cerrojo.newCondition();
 
     public Cocina(int verd, int carne, int pasta) {
         this.cantVerduras = verd;

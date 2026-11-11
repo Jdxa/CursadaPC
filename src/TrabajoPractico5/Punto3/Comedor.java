@@ -2,6 +2,7 @@ package TrabajoPractico5.Punto3;
 
 import java.util.concurrent.Semaphore;
 
+// punto 4 agrego que semPlatos en Perro tome 2 permisos equivalente a 2 platos
 public class Comedor {
     private Semaphore semPlatos;
     private Semaphore semGatos = new Semaphore(1); // primero entrar los gatos
@@ -31,7 +32,7 @@ public class Comedor {
 
     public void ingresarPerros() throws InterruptedException {
         semPerros.acquire(); // entra si le toca
-        semPlatos.acquire(); // entra si hay lugar
+        semPlatos.acquire(2); // entra si hay lugar
 
         mutex.acquire(); // zona critica
         contAnimales++;
@@ -58,7 +59,7 @@ public class Comedor {
 
     public void salirPerros() throws InterruptedException {
         System.out.println(Thread.currentThread().getName() + " salio del comedor (perro)");
-        semPlatos.release(); // libero un plato
+        semPlatos.release(2); // libero un plato
 
         mutex.acquire(); // zona critica
         contAnimales--; // reduzco los animales dentro del comedor
