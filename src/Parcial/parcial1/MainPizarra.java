@@ -1,4 +1,4 @@
-package Parcial;
+package Parcial.parcial1;
 
 public class MainPizarra {
     public static void main(String[] args) {

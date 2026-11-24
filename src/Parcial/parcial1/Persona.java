@@ -1,4 +1,4 @@
-package Parcial;
+package Parcial.parcial1;
 
 public class Persona implements Runnable {
 
