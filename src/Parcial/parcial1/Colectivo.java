@@ -1,4 +1,4 @@
-package Parcial;
+package Parcial.parcial1;
 
 import java.util.concurrent.Semaphore;
 

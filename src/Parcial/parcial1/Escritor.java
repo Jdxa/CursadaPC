@@ -1,4 +1,4 @@
-package Parcial;
+package Parcial.parcial1;
 
 public class Escritor implements Runnable {
     private Pizarra pi;
