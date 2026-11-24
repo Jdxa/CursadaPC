@@ -12,8 +12,12 @@ public class Recepcionista implements Runnable {
     @Override
     public void run() {
         try {
-            int[] buffer;
-            buffer = canalCom.tomar();
+            while (true) {
+                int[] buffer;
+                buffer = canalCom.tomar();
+                hallEntr.poner(buffer);
+                hallEntr.avisar();
+            }
 
         } catch (Exception e) {
             // TODO: handle exception

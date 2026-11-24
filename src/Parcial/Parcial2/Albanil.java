@@ -10,8 +10,10 @@ public class Albanil implements Runnable {
     @Override
     public void run() {
         try {
-            canalComun.construir();
-            Thread.sleep(500);
+            while (true) {
+                canalComun.construir();
+                Thread.sleep(500);
+            }
         } catch (Exception e) {
 
         }

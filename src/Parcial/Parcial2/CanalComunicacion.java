@@ -18,6 +18,7 @@ public class CanalComunicacion {
         cerrojo.lock();
         try {
             while (lleno) {
+                System.out.println(Thread.currentThread().getName() + " espera a trabajar");
                 condAlba.await();
             }
             // busco la posicion
@@ -26,11 +27,12 @@ public class CanalComunicacion {
                 i++;
             }
             if (i < hab.length) {
-                hab[i] = r.nextInt(5) + 1;
+                hab[i] = r.nextInt(1, 5);
 
                 // Si acabamos de ocupar la última celda (índice 9), el buffer quedó lleno
                 if (i == hab.length - 1) {
                     lleno = true;
+                    System.out.println("buffer lleno...");
                     condRecep.signal();
                 }
             }
@@ -55,6 +57,7 @@ public class CanalComunicacion {
             lleno = false;
             condAlba.signalAll();
             // devuelvo el buffer para usarlo en el hall de entrada
+            System.out.println(Thread.currentThread().getName() + " toma el buffer");
             return buff;
         } finally {
             cerrojo.unlock();

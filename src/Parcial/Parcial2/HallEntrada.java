@@ -25,10 +25,12 @@ public class HallEntrada {
             int i = this.prio - 1;// n-1 es la ultima pos
             // busco la posicion con mayor prioridad
             while (i > 0 && esperando[i] == 0) {
+
                 i--;
             }
             // si no hay nadie, solo despierto si hay alguien
             if (esperando[i] > 0) {
+                System.out.println(Thread.currentThread().getName() + " despierto la fila " + i);
                 fila[i].signalAll();
             }
         } finally {
@@ -40,6 +42,7 @@ public class HallEntrada {
         cerrojo.lock();
         try {
             this.hab = buf;
+            System.out.println(Thread.currentThread().getName() + " cambio el buffer");
         } finally {
             cerrojo.unlock();
         }
@@ -62,21 +65,26 @@ public class HallEntrada {
         return exito;
     }
 
-    public boolean consultar(int cant, int paciencia) throws InterruptedException {
+    public void consultar(int cant, int paciencia) throws InterruptedException {
         cerrojo.lock();
         int p = paciencia;
         int i = 0;
         boolean encontrado = false;
         try {
             // repite hasta que encuentre lugar
+            System.out.println(Thread.currentThread().getName() + " tiene una paciencia inicial de " + paciencia
+                    + " y busca: " + cant + " lugares");
             while (!encontrado) {
                 // si encontro lugar sale
                 if (comprobarHab(cant)) {
+
                     encontrado = true;
                 } else {
                     // le toca esperar
                     esperando[i]++;
                     try {
+                        System.out.println(
+                                Thread.currentThread().getName() + " no encontro lugar. Espera en la fila " + i);
                         fila[i].await();
                     } finally {
                         // lo despertaron
@@ -84,17 +92,19 @@ public class HallEntrada {
                     }
                     // reduce su paciencia
                     p--;
+                    System.out.println(Thread.currentThread().getName() + " se baja su paciencia a " + p);
                     if (p <= 0) {
                         // aumento su prioridad mientras que este dentro del rango
                         if (i < this.prio - 1) {
                             i++;
+                            System.out.println(Thread.currentThread().getName() + " aumenta su prioridad a " + i);
                         }
                         // reseteo la paciencia
                         p = paciencia;
                     }
                 }
             }
-            return encontrado;
+            System.out.println(Thread.currentThread().getName() + " encontro lugar");
         } finally {
             cerrojo.unlock();
         }
