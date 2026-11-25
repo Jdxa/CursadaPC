@@ -14,8 +14,22 @@ public class Jefe implements Runnable {
     @Override
     public void run() {
         try {
-            hall.consultar(vacantes, paciencia);
-            Thread.sleep(1000);
+            boolean exito = false;
+            int p = paciencia;
+            int i = 0;
+            while (!exito) {
+                if (!hall.comprobarHab(vacantes)) {
+                    p--;
+                    if (p == 0) {
+                        i++;
+                    }
+                    hall.esperar(i);
+                } else {
+                    System.out.println("encontro lugar");
+                    exito = true;
+                }
+            }
+
         } catch (Exception e) {
             // TODO: handle exception
         }

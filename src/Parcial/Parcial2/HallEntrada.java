@@ -19,13 +19,13 @@ public class HallEntrada {
         }
     }
 
-    public void avisar() {
+    public void avisar() throws InterruptedException {
         cerrojo.lock();
         try {
+
             int i = this.prio - 1;// n-1 es la ultima pos
             // busco la posicion con mayor prioridad
             while (i > 0 && esperando[i] == 0) {
-
                 i--;
             }
             // si no hay nadie, solo despierto si hay alguien
@@ -38,75 +38,97 @@ public class HallEntrada {
         }
     }
 
-    public void poner(int[] buf) {
+    public void poner(int[] buf) throws InterruptedException {
         cerrojo.lock();
         try {
             this.hab = buf;
+
             System.out.println(Thread.currentThread().getName() + " cambio el buffer");
         } finally {
             cerrojo.unlock();
         }
     }
 
-    private boolean comprobarHab(int cant) {
-        boolean exito = false;
-        int i = 0;
-        // compruebo todas las habitaciones
-        while (!exito && i < hab.length) {
-            // si encontre lugar salgo y limpio esa habitacion
-            if (hab[i] >= cant) {
-                exito = true;
-                hab[i] = 0;
-            } else {
-                // sino sigo buscando
-                i++;
-            }
-        }
-        return exito;
-    }
-
-    public void consultar(int cant, int paciencia) throws InterruptedException {
+    // el jefe comprueba la hab
+    public boolean comprobarHab(int cant) {
         cerrojo.lock();
-        int p = paciencia;
-        int i = 0;
-        boolean encontrado = false;
         try {
-            // repite hasta que encuentre lugar
-            System.out.println(Thread.currentThread().getName() + " tiene una paciencia inicial de " + paciencia
-                    + " y busca: " + cant + " lugares");
-            while (!encontrado) {
-                // si encontro lugar sale
-                if (comprobarHab(cant)) {
-
-                    encontrado = true;
+            boolean exito = false;
+            int i = 0;
+            // compruebo todas las habitaciones
+            while (!exito && i < hab.length) {
+                // si encontre lugar salgo y limpio esa habitacion
+                if (hab[i] >= cant) {
+                    System.out.println(Thread.currentThread().getName() + " encontro lugar");
+                    exito = true;
+                    hab[i] = 0;
                 } else {
-                    // le toca esperar
-                    esperando[i]++;
-                    try {
-                        System.out.println(
-                                Thread.currentThread().getName() + " no encontro lugar. Espera en la fila " + i);
-                        fila[i].await();
-                    } finally {
-                        // lo despertaron
-                        esperando[i]--;
-                    }
-                    // reduce su paciencia
-                    p--;
-                    System.out.println(Thread.currentThread().getName() + " se baja su paciencia a " + p);
-                    if (p <= 0) {
-                        // aumento su prioridad mientras que este dentro del rango
-                        if (i < this.prio - 1) {
-                            i++;
-                            System.out.println(Thread.currentThread().getName() + " aumenta su prioridad a " + i);
-                        }
-                        // reseteo la paciencia
-                        p = paciencia;
-                    }
+                    // sino sigo buscando
+                    i++;
                 }
             }
-            System.out.println(Thread.currentThread().getName() + " encontro lugar");
+            return exito;
         } finally {
             cerrojo.unlock();
         }
     }
+
+    // hago esperar al jefe
+    public void esperar(int i) throws InterruptedException {
+        cerrojo.lock();
+        try {
+            System.out.println(Thread.currentThread().getName() + " espera en fila " + i);
+            esperando[i]++;
+            fila[i].await();
+            esperando[i]--;
+        } finally {
+            cerrojo.unlock();
+        }
+    }
+
+    // esta al pedo
+    // public void consultar(int cant, int paciencia) throws InterruptedException {
+    // cerrojo.lock();
+    // int p = paciencia;
+    // int i = 0;
+    // boolean encontrado = false;
+    // try {
+    // // repite hasta que encuentre lugar
+    // System.out.println(Thread.currentThread().getName() + " tiene una paciencia
+    // inicial de " + paciencia
+    // + " y busca: " + cant + " lugares");
+    // while (!encontrado) {
+    // // si encontro lugar sale
+    // if (comprobarHab(cant)) {
+    // encontrado = true;
+    // } else {
+    // // le toca esperar
+    // esperando[i]++;
+    // System.out.println(
+    // Thread.currentThread().getName() + " no encontro lugar. Espera en la fila " +
+    // i);
+    // fila[i].await();
+    // // lo despertaron
+    // esperando[i]--;
+    // // reduce su paciencia
+    // p--;
+    // System.out.println(Thread.currentThread().getName() + " se baja su paciencia
+    // a " + p);
+    // if (p <= 0) {
+    // // aumento su prioridad mientras que este dentro del rango
+    // if (i < this.prio - 1) {
+    // i++;
+    // System.out.println(Thread.currentThread().getName() + " aumenta su prioridad
+    // a " + i);
+    // }
+    // // reseteo la paciencia
+    // p = paciencia;
+    // }
+    // }
+    // }
+    // System.out.println(Thread.currentThread().getName() + " encontro lugar");
+    // } finally {
+    // cerrojo.unlock();
+    // }
+    // }
 }
