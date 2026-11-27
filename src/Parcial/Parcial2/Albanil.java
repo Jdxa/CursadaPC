@@ -12,7 +12,7 @@ public class Albanil implements Runnable {
         try {
             while (true) {
                 canalComun.construir();
-                Thread.sleep(500);
+                Thread.sleep(1000);
             }
         } catch (Exception e) {
 
